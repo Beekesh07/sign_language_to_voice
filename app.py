@@ -94,10 +94,18 @@ def tts_mp3(text):
         return None
 
 
+_speech_counter = 0
+
+
 def speak(text, container=st, autoplay=True):
+    global _speech_counter
     audio = tts_mp3(text)
     if audio:
-        container.audio(audio, format="audio/mp3", autoplay=autoplay)
+        # Streamlit builds the audio element's ID from its content, so the same
+        # word spoken twice would clash. A unique alt text keeps every ID different.
+        _speech_counter += 1
+        container.audio(audio, format="audio/mp3", autoplay=autoplay,
+                        alt=f"Spoken word: {text} ({_speech_counter})")
     else:
         container.caption("🔇 Speech unavailable (no internet connection for text-to-speech).")
 
