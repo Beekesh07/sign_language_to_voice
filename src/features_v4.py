@@ -63,6 +63,10 @@ class LandmarkExtractor:
         # VIDEO mode needs strictly increasing timestamps, even across videos
         self._last_ts = -1
 
+        # Raw (0-1 image coordinates) landmarks of the last frame, for drawing
+        self.last_hands = []
+        self.last_pose = None
+
     def close(self):
         self.hands.close()
         self.pose.close()
@@ -94,11 +98,15 @@ class LandmarkExtractor:
             if scale < 1e-6:
                 scale = 1.0
 
+        self.last_pose = pose[:, :2].copy() if pose_result.pose_landmarks else None
+        self.last_hands = []
+
         left = np.zeros((21, 3), np.float32)
         right = np.zeros((21, 3), np.float32)
 
         for landmarks, handedness in zip(hand_result.hand_landmarks, hand_result.handedness):
             pts = np.array([[p.x, p.y, p.z] for p in landmarks], np.float32)
+            self.last_hands.append(pts[:, :2].copy())
             if handedness[0].category_name == "Left":
                 left = pts
             else:
