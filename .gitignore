@@ -1,0 +1,20 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Dataset and generated landmark data (large - recreate with the scripts)
+data/
+
+# Old experiment models (keep only the V4 model + MediaPipe models)
+models/best_lstm.pth
+models/best_transformer.pth
+models/best_transformer_v2.pth
+models/best_transformer_v3.pth
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
